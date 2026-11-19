@@ -7,6 +7,8 @@ namespace PhytoRegistre.CatalogBuilder.Sftp;
 public sealed class SshNetSftpSourceFactory : ISftpSourceFactory
 {
     private static readonly TimeSpan Timeout = TimeSpan.FromSeconds(30);
+    private static readonly TimeSpan OperationTimeout = TimeSpan.FromMinutes(2);
+    private static readonly TimeSpan KeepAliveInterval = TimeSpan.FromSeconds(30);
 
     public ISftpSource Connect(SftpSettings settings, TextWriter log)
     {
