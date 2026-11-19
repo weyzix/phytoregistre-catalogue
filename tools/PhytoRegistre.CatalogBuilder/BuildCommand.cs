@@ -23,13 +23,15 @@ internal sealed class BuildCommand(TimeProvider time, TextWriter output)
 
     public int Run(BuildRequest request)
     {
-        var fullFile = InputFiles.ResolveFull(request.Full);
-        var dailyFiles = InputFiles.ResolveDaily(request.Daily, fullFile);
+        var fullParts = InputFiles.ResolveFullParts(request.Full);
+        var dailyFiles = InputFiles.ResolveDaily(request.Daily, fullParts[0]);
         var suspensionsFile = InputFiles.ResolveOptionalFile(request.Suspensions);
-        output.WriteLine($"Export complet : {Path.GetFileName(fullFile)}");
+        output.WriteLine($"Export complet : {string.Join(", ", fullParts.Select(Path.GetFileName))}");
         output.WriteLine($"Fichiers quotidiens : {dailyFiles.Count}");
 
-        var result = Parse(fullFile, dailyFiles, suspensionsFile);
+        // Les parties 2..n s'appliquent comme des mises à jour : chaque autorisation est identifiée par son
+        // numéro, donc ajouter une partie revient à fusionner, et les fichiers quotidiens passent ensuite.
+        var result = Parse(fullParts[0], [.. fullParts.Skip(1), .. dailyFiles], suspensionsFile);
         if (result.Catalog.Products.Count == 0)
         {
             throw ToolException.InvalidData("Le catalogue ne contient aucun produit : publication refusée.");

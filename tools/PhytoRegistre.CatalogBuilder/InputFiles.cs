@@ -5,12 +5,15 @@ namespace PhytoRegistre.CatalogBuilder;
 /// <summary>Résolution des fichiers d'entrée locaux (fichier, dossier, archive .zip).</summary>
 internal static class InputFiles
 {
-    /// <summary>Fichier donné, ou le plus récent (date du nom puis date de modification) d'un dossier.</summary>
-    public static string ResolveFull(string path)
+    /// <summary>
+    /// Fichier donné, ou toutes les parties de l'export le plus récent d'un dossier : l'export officiel est
+    /// découpé (2026_11_01_FULL_1.json … FULL_5.json). Sans date dans le nom, seul le plus récent est pris.
+    /// </summary>
+    public static IReadOnlyList<string> ResolveFullParts(string path)
     {
         if (File.Exists(path))
         {
-            return Path.GetFullPath(path);
+            return [Path.GetFullPath(path)];
         }
 
         if (!Directory.Exists(path))
@@ -18,8 +21,17 @@ internal static class InputFiles
             throw ToolException.InvalidData($"Export complet introuvable : {path}");
         }
 
-        return DataFiles(path).LastOrDefault()
+        var files = DataFiles(path).ToList();
+        var latest = files.LastOrDefault()
             ?? throw ToolException.InvalidData($"Aucun fichier .json ou .zip dans le dossier de l'export complet : {path}");
+        if (FilePatterns.DateFromName(Path.GetFileName(latest)) is not { } date)
+        {
+            return [latest];
+        }
+
+        return FilePatterns.InPartOrder(
+            files.Where(f => FilePatterns.DateFromName(Path.GetFileName(f)) == date),
+            f => Path.GetFileName(f));
     }
 
     /// <summary>Fichiers quotidiens triés, postérieurs à l'export complet lorsque les dates sont connues.</summary>

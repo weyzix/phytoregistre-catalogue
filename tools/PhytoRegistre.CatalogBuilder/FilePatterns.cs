@@ -38,6 +38,19 @@ internal static partial class FilePatterns
     public static DateTime SortKey(string fileName, DateTime lastWriteUtc) =>
         DateFromName(fileName)?.ToDateTime(TimeOnly.MinValue) ?? lastWriteUtc;
 
+    /// <summary>Ordre des parties d'un export découpé : FULL_1, FULL_2, …, FULL_10 (numéro final, puis nom).</summary>
+    public static IReadOnlyList<T> InPartOrder<T>(IEnumerable<T> items, Func<T, string> name) =>
+        [.. items.OrderBy(i => PartNumber(name(i))).ThenBy(i => name(i), StringComparer.Ordinal)];
+
+    private static int PartNumber(string fileName)
+    {
+        var match = PartPattern().Match(Path.GetFileNameWithoutExtension(fileName));
+        return match.Success ? int.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture) : 0;
+    }
+
+    [GeneratedRegex(@"_(\d{1,3})$", RegexOptions.CultureInvariant)]
+    private static partial Regex PartPattern();
+
     private static Regex GlobToRegex(string glob) =>
         new("^" + Regex.Escape(glob).Replace(@"\*", ".*").Replace(@"\?", ".") + "$",
             RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromSeconds(1));

@@ -3,11 +3,15 @@
 Publication automatique du catalogue de produits phytopharmaceutiques utilisé par l'application
 Android **PhytoRegistre**.
 
-Chaque nuit, GitHub Actions ([.github/workflows/catalogue.yml](.github/workflows/catalogue.yml)) :
+Chaque jour, un poste situé en Belgique (le serveur SFTP Fytoweb n'accepte que les adresses IP belges) :
 
-1. télécharge l'export officiel Fytoweb par SFTP (`tools/PhytoRegistre.CatalogBuilder`) ;
+1. télécharge l'export officiel Fytoweb par SFTP (`tools/PhytoRegistre.CatalogBuilder`) — l'export
+   complet mensuel est découpé en parties (`yyyy_MM_dd_FULL_n.json`), suivies de fichiers `yyyy_MM_dd_DELTA.json` ;
 2. construit `catalog-<version>.json.gz` + `manifest.json` (empreinte SHA-256) ;
-3. publie le tout sur GitHub Pages.
+3. publie le tout sur la branche `gh-pages` (GitHub Pages).
+
+Le workflow [.github/workflows/catalogue.yml](.github/workflows/catalogue.yml) fait la même chose mais
+est désactivé : les runners GitHub (hors Belgique) sont refusés par le serveur Fytoweb.
 
 Les téléphones ne téléchargent que ces fichiers publics — aucun identifiant n'est embarqué dans l'app.
 Si une exécution échoue, la dernière version publiée reste en ligne.
