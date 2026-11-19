@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catalogue PhytoRegistre</title>
+  <style>
+    :root { --bg: #f7f9f5; --fg: #1d2a1c; --muted: #4f5d4c; --accent: #2e7d32; }
+    @media (prefers-color-scheme: dark) { :root { --bg: #141a13; --fg: #e6eee4; --muted: #a9b8a5; --accent: #81c784; } }
+    body { margin: 0; padding: 24px 16px; background: var(--bg); color: var(--fg);
+           font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+    main { max-width: 640px; margin: 0 auto; }
+    a { color: var(--accent); }
+    code { font-size: .95em; }
+    p.small { color: var(--muted); font-size: 14px; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Catalogue PhytoRegistre</h1>
+  <p>Catalogue des produits phytopharmaceutiques autorisés en Belgique, utilisé par l'application
+     Android PhytoRegistre (registre électronique d'utilisation, Règl. UE 2023/564).</p>
+  <p>Fichiers : <a href="manifest.json"><code>manifest.json</code></a> (version, empreinte SHA-256)
+     et le catalogue compressé qu'il référence. Mis à jour automatiquement chaque jour.</p>
+  <h2>Source et licence des données</h2>
+  <p>Source : <a href="https://fytoweb.be/fr">SPF Santé publique – Fytoweb</a>, données publiées sous
+     licence <a href="https://creativecommons.org/licenses/by/4.0/deed.fr">CC BY 4.0</a>.
+     Les données ont été transformées (sélection de champs, format compact).
+     Seule la base officielle Fytoweb fait foi.</p>
+  <p class="small">Projet indépendant, non affilié au SPF Santé publique.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "_comment": "DONNEES D'EXEMPLE (SAMPLE) - noms et numeros d'autorisation fictifs, uniquement pour illustrer les formats (nnnnP/B, P/P, G/B, G/P, BS_nnnn) et les indicateurs SPe8 / BBCH. A REMPLACER par l'export officiel Fytoweb (https://fytoweb.be) avant toute utilisation reelle. Ne pas se fier a ces entrees pour un traitement.",
+  "items": [
+    { "id": "5a3f0001-0000-4000-8000-000000000001", "commercialName": "Exemple Herbicide Céréales 500 SC", "isSample": true, "authorizationNumber": "9876P/B", "unit": "Liter", "requiresBbchStage": true },
+    { "id": "5a3f0001-0000-4000-8000-000000000002", "commercialName": "Exemple Herbicide Maïs 330 OD", "isSample": true, "authorizationNumber": "10234P/B", "unit": "Liter", "requiresBbchStage": true },
+    { "id": "5a3f0001-0000-4000-8000-000000000003", "commercialName": "Exemple Herbicide Betterave 160 SC", "isSample": true, "authorizationNumber": "8812P/B", "unit": "Liter" },
+    { "id": "5a3f0001-0000-4000-8000-000000000004", "commercialName": "Exemple Fongicide Céréales 250 EC", "isSample": true, "authorizationNumber": "10571P/B", "unit": "Liter", "requiresBbchStage": true },
+    { "id": "5a3f0001-0000-4000-8000-000000000005", "commercialName": "Exemple Fongicide Pomme de terre 75 WG", "isSample": true, "authorizationNumber": "9450P/B", "unit": "Kilogram" },
+    { "id": "5a3f0001-0000-4000-8000-000000000006", "commercialName": "Exemple Fongicide Colza 200 SC", "isSample": true, "authorizationNumber": "10022P/B", "unit": "Liter", "requiresBbchStage": true },
+    { "id": "5a3f0001-0000-4000-8000-000000000007", "commercialName": "Exemple Insecticide Colza 100 EC", "isSample": true, "authorizationNumber": "9123P/B", "unit": "Liter", "isSpe8": true, "hasTimeRestriction": true },
+    { "id": "5a3f0001-0000-4000-8000-000000000008", "commercialName": "Exemple Insecticide Grandes cultures 25 EW", "isSample": true, "authorizationNumber": "8745P/B", "unit": "Liter", "isSpe8": true, "hasTimeRestriction": true, "requiresBbchStage": true },
+    { "id": "5a3f0001-0000-4000-8000-000000000009", "commercialName": "Exemple Insecticide Légumes 50 SC", "isSample": true, "authorizationNumber": "10311P/P", "unit": "Liter", "isSpe8": true, "hasTimeRestriction": true },
+    { "id": "5a3f0001-0000-4000-8000-000000000010", "commercialName": "Exemple Insecticide Verger 10 WG", "isSample": true, "authorizationNumber": "9988P/P", "unit": "Kilogram", "isSpe8": true },
+    { "id": "5a3f0001-0000-4000-8000-000000000011", "commercialName": "Exemple Régulateur de croissance 750 SL", "isSample": true, "authorizationNumber": "7654P/B", "unit": "Liter", "requiresBbchStage": true },
+    { "id": "5a3f0001-0000-4000-8000-000000000012", "commercialName": "Exemple Anti-limaces 3 GB", "isSample": true, "authorizationNumber": "10456G/B", "unit": "Kilogram" },
+    { "id": "5a3f0001-0000-4000-8000-000000000013", "commercialName": "Exemple Herbicide Jardin 360 SL", "isSample": true, "authorizationNumber": "8890G/P", "unit": "Liter" },
+    { "id": "5a3f0001-0000-4000-8000-000000000014", "commercialName": "Exemple Herbicide Total 450 SL", "isSample": true, "authorizationNumber": "9301P/B", "unit": "Liter" },
+    { "id": "5a3f0001-0000-4000-8000-000000000015", "commercialName": "Exemple Substance de base (vinaigre)", "isSample": true, "authorizationNumber": "BS_0001", "unit": "Liter", "activeSubstances": "Vinaigre" }
+  ]
+}

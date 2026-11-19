@@ -1,0 +1,88 @@
+# Construit chaque nuit le catalogue des produits phytopharmaceutiques à partir de l'export
+# officiel Fytoweb (SPF Santé publique, licence CC BY 4.0) et le publie sur GitHub Pages.
+# Les téléphones téléchargent uniquement manifest.json + catalog-*.json.gz (aucun identifiant).
+# Secret requis : FYTOWEB_SFTP_PASSWORD (Settings > Secrets and variables > Actions).
+name: Catalogue Fytoweb
+
+on:
+  schedule:
+    - cron: "17 4 * * *" # chaque jour vers 05:17 (heure belge d'hiver)
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "all = construire et publier ; list = diagnostic (liste le serveur SFTP)"
+        type: choice
+        options: [all, list]
+        default: all
+      full_pattern:
+        description: "Motif du fichier d'export complet (optionnel)"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: catalogue
+  cancel-in-progress: false
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  DOTNET_NOLOGO: "1"
+  TOOL: tools/PhytoRegistre.CatalogBuilder
+  BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Pays de l'adresse IP du runner (diagnostic accès Fytoweb)
+        run: curl -s --max-time 10 https://ipinfo.io/country || echo "inconnu"
+
+      - name: Compiler l'outil
+        run: dotnet build "$TOOL" -c Release
+
+      - name: Lister le serveur Fytoweb (diagnostic)
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'list' }}
+        env:
+          FYTOWEB_SFTP_PASSWORD: ${{ secrets.FYTOWEB_SFTP_PASSWORD }}
+        run: dotnet run --project "$TOOL" -c Release --no-build -- list --path /
+
+      - name: Télécharger l'export et construire le catalogue
+        if: ${{ github.event_name == 'schedule' || inputs.mode == 'all' }}
+        env:
+          FYTOWEB_SFTP_PASSWORD: ${{ secrets.FYTOWEB_SFTP_PASSWORD }}
+          FULL_PATTERN: ${{ inputs.full_pattern || vars.FYTOWEB_FULL_PATTERN }}
+        run: |
+          args=(all --out site --work work --base-url "$BASE_URL")
+          if [ -n "$FULL_PATTERN" ]; then args+=(--full-pattern "$FULL_PATTERN"); fi
+          dotnet run --project "$TOOL" -c Release --no-build -- "${args[@]}"
+          cp -r site-static/. site/
+          touch site/.nojekyll
+          ls -la site
+
+      - name: Préparer la publication
+        if: ${{ github.event_name == 'schedule' || inputs.mode == 'all' }}
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    if: ${{ github.event_name == 'schedule' || inputs.mode == 'all' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
